@@ -17,6 +17,7 @@ import {
 import { repository } from '@/lib/data/repository';
 import { AmazonBuyButton } from '@/components/products/AmazonBuyButton';
 import { ProductCard } from '@/components/products/ProductCard';
+import { AdPlacement } from '@/components/ads/AdPlacement';
 import type { Metadata } from 'next';
 
 interface ProductPageProps {
@@ -247,6 +248,9 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
 
       </div>
 
+      {/* Ad: Below product information */}
+      <AdPlacement placement="product_detail_below_info" />
+
       {/* Related Products Section */}
       {relatedProducts.length > 0 && (
         <section className="space-y-6 pt-6">
@@ -270,6 +274,10 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
         </section>
       )}
 
+      {/* Ad: Below related products */}
+      <AdPlacement placement="product_detail_below_related" />
+
     </div>
   );
 }
+

@@ -3,10 +3,14 @@ import React from 'react';
 import Link from 'next/link';
 import { ShoppingBag, ShieldCheck } from 'lucide-react';
 import { MARKETPLACE_LIST } from '@/lib/marketplaces';
+import { AdPlacement } from '@/components/ads/AdPlacement';
 
 export function Footer() {
   return (
     <footer className="bg-slate-950 text-slate-400 border-t border-slate-800 text-sm">
+      {/* Ad: Above footer */}
+      <AdPlacement placement="above_footer" className="bg-white border-b border-slate-200 py-2 px-4" />
+
       {/* Amazon Associates Disclaimer */}
       <div className="bg-slate-900/80 border-b border-slate-800/80 py-6 px-4">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">

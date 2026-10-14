@@ -14,6 +14,7 @@ import {
   ShieldCheck,
   ArrowLeft,
 } from 'lucide-react';
+import { AdPlacement } from '@/components/ads/AdPlacement';
 import type { Metadata } from 'next';
 
 interface BlogPostPageProps {
@@ -130,16 +131,28 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
       <div className="bg-white rounded-3xl p-8 sm:p-12 border border-slate-200 shadow-sm">
         <div className="prose prose-slate max-w-none text-slate-800 text-base leading-relaxed space-y-6">
           {post.content.split('\n\n').map((paragraph, index) => {
-            if (paragraph.startsWith('# ')) {
-              return <h2 key={index} className="text-2xl font-extrabold text-slate-900 tracking-tight pt-4">{paragraph.replace('# ', '')}</h2>;
-            }
-            if (paragraph.startsWith('## ')) {
-              return <h3 key={index} className="text-xl font-bold text-slate-900 pt-3">{paragraph.replace('## ', '')}</h3>;
-            }
-            if (paragraph.startsWith('### ')) {
-              return <h4 key={index} className="text-lg font-bold text-slate-900">{paragraph.replace('### ', '')}</h4>;
-            }
-            return <p key={index}>{paragraph}</p>;
+            const element = (() => {
+              if (paragraph.startsWith('# ')) {
+                return <h2 key={index} className="text-2xl font-extrabold text-slate-900 tracking-tight pt-4">{paragraph.replace('# ', '')}</h2>;
+              }
+              if (paragraph.startsWith('## ')) {
+                return <h3 key={index} className="text-xl font-bold text-slate-900 pt-3">{paragraph.replace('## ', '')}</h3>;
+              }
+              if (paragraph.startsWith('### ')) {
+                return <h4 key={index} className="text-lg font-bold text-slate-900">{paragraph.replace('### ', '')}</h4>;
+              }
+              return <p key={index}>{paragraph}</p>;
+            })();
+
+            return (
+              <React.Fragment key={index}>
+                {element}
+                {/* Insert ad after every 3rd paragraph */}
+                {(index + 1) % 3 === 0 && (
+                  <AdPlacement placement="blog_between_paragraphs" />
+                )}
+              </React.Fragment>
+            );
           })}
         </div>
       </div>
@@ -172,6 +185,9 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         </div>
       )}
 
+      {/* Ad: End of article */}
+      <AdPlacement placement="blog_end_of_article" />
+
       {/* Back to Guides link */}
       <div>
         <Link
@@ -186,3 +202,4 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
     </article>
   );
 }
+

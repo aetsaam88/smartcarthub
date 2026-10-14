@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # GlobalCart — International Amazon Affiliate Marketing Platform
 
 [![Next.js 14](https://img.shields.io/badge/Next.js-14%20App%20Router-black?logo=next.js)](https://nextjs.org/)
@@ -142,3 +143,6 @@ GlobalCart is constructed around the **Amazon Associates Operating Agreement** a
 - [x] **Proper Trademark Use**: Follows Amazon Trademark Guidelines without modifying the Amazon logo or claiming official endorsement.
 - [x] **Regional Tag Isolation**: Associate tags are segmented by locale (`globalcart-us-20`, `globalcart-uk-21`, `globalcart-de-21`, etc.).
 - [x] **Privacy Compliance**: GDPR-compliant cookie handling, newsletter opt-in consent timestamps, and zero storage of raw IP addresses for basic click telemetry.
+=======
+# smartcarthub
+>>>>>>> 94e90da7d80171bdcdc8a09bcdd22ca016f6a007

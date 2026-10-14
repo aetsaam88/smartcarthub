@@ -3,10 +3,9 @@
 import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Star, Check, Plus, ExternalLink, ArrowRight } from 'lucide-react';
+import { Star, ArrowRight } from 'lucide-react';
 import { Product } from '@/types';
 import { AmazonBuyButton } from './AmazonBuyButton';
-import { useComparison } from '@/context/ComparisonContext';
 
 interface ProductCardProps {
   product: Product;
@@ -14,43 +13,17 @@ interface ProductCardProps {
 }
 
 export function ProductCard({ product, compact = false }: ProductCardProps) {
-  const { isCompared, addToCompare, removeFromCompare } = useComparison();
-  const inComparison = isCompared(product.id);
-
-  const toggleCompare = (e: React.MouseEvent) => {
-    e.preventDefault();
-    if (inComparison) {
-      removeFromCompare(product.id);
-    } else {
-      addToCompare(product);
-    }
-  };
-
   return (
     <div className="group relative flex flex-col bg-white rounded-2xl border border-slate-200/80 shadow-sm hover:shadow-xl hover:border-amber-300 transition-all duration-300 overflow-hidden">
       
-      {/* Featured Badge & Compare Button */}
-      <div className="absolute top-3 left-3 right-3 z-10 flex items-center justify-between pointer-events-none">
-        {product.featured ? (
+      {/* Featured Badge */}
+      {product.featured && (
+        <div className="absolute top-3 left-3 z-10 pointer-events-none">
           <span className="pointer-events-auto bg-amber-500 text-white text-[11px] font-bold px-2.5 py-1 rounded-full shadow-sm">
             Top Pick
           </span>
-        ) : (
-          <span />
-        )}
-        <button
-          onClick={toggleCompare}
-          className={`pointer-events-auto text-[11px] font-semibold px-2.5 py-1 rounded-full flex items-center gap-1 shadow-sm backdrop-blur-md transition-colors ${
-            inComparison
-              ? 'bg-amber-600 text-white'
-              : 'bg-white/90 text-slate-700 hover:bg-white hover:text-amber-600 border border-slate-200'
-          }`}
-          title={inComparison ? 'Remove from comparison' : 'Add to comparison'}
-        >
-          {inComparison ? <Check className="w-3 h-3" /> : <Plus className="w-3 h-3" />}
-          <span>{inComparison ? 'Comparing' : 'Compare'}</span>
-        </button>
-      </div>
+        </div>
+      )}
 
       {/* Product Image */}
       <Link

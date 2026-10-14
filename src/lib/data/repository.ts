@@ -8,6 +8,8 @@ import type {
   MarketplaceCode,
   NewsletterSubscriber,
 } from '../../types/index.ts';
+import type { AdSenseSettings } from '../../types/adsense.ts';
+import { DEFAULT_ADSENSE_SETTINGS } from '../../types/adsense.ts';
 import {
   INITIAL_SETTINGS,
   SAMPLE_CATEGORIES,
@@ -53,6 +55,7 @@ class DataRepository {
   private clicks: AffiliateClick[] = [...SAMPLE_CLICKS];
   private activityLogs: AdminActivityLog[] = [...SAMPLE_ACTIVITY_LOGS];
   private subscribers: NewsletterSubscriber[] = [];
+  private adSenseSettings: AdSenseSettings = { ...DEFAULT_ADSENSE_SETTINGS };
 
   // Categories
   async getCategories(): Promise<Category[]> {
@@ -869,6 +872,64 @@ class DataRepository {
     }
 
     return [...this.subscribers];
+  }
+
+  // ─── AdSense Settings ────────────────────────────────────────────────────────
+
+  async getAdSenseSettings(): Promise<AdSenseSettings> {
+    const db = await getMongoDb();
+    if (db) {
+      await ensureSeeded(db);
+      const doc = await db
+        .collection<AdSenseSettings>('adsense_settings')
+        .findOne({}, { projection: { _id: 0 } });
+      if (doc) return doc;
+      // First run — persist defaults so subsequent GETs return a proper document
+      await db.collection('adsense_settings').insertOne({ ...DEFAULT_ADSENSE_SETTINGS });
+      return { ...DEFAULT_ADSENSE_SETTINGS };
+    }
+
+    return { ...this.adSenseSettings };
+  }
+
+  async updateAdSenseSettings(patch: Partial<AdSenseSettings>): Promise<AdSenseSettings> {
+    const db = await getMongoDb();
+    if (db) {
+      await ensureSeeded(db);
+      const current =
+        (await db
+          .collection<AdSenseSettings>('adsense_settings')
+          .findOne({}, { projection: { _id: 0 } })) || DEFAULT_ADSENSE_SETTINGS;
+
+      const updated: AdSenseSettings = {
+        ...current,
+        ...patch,
+        // Deep-merge placements so a partial patch doesn't wipe other keys
+        placements: {
+          ...current.placements,
+          ...(patch.placements || {}),
+        },
+        updated_at: new Date().toISOString(),
+      };
+
+      await db
+        .collection('adsense_settings')
+        .updateOne({}, { $set: updated }, { upsert: true });
+
+      return updated;
+    }
+
+    // In-memory fallback
+    this.adSenseSettings = {
+      ...this.adSenseSettings,
+      ...patch,
+      placements: {
+        ...this.adSenseSettings.placements,
+        ...(patch.placements || {}),
+      },
+      updated_at: new Date().toISOString(),
+    };
+    return { ...this.adSenseSettings };
   }
 }
 

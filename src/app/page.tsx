@@ -3,20 +3,13 @@ import Link from 'next/link';
 import Image from 'next/image';
 import {
   ArrowRight,
-  Star,
-  CheckCircle2,
-  Layers,
-  Sparkles,
-  TrendingUp,
-  BookOpen,
   Award,
-  ShieldCheck,
 } from 'lucide-react';
 import { repository } from '@/lib/data/repository';
 import { HeroSection } from '@/components/home/HeroSection';
 import { ProductCard } from '@/components/products/ProductCard';
 import { NewsletterSection } from '@/components/home/NewsletterSection';
-import { formatDate } from '@/lib/utils';
+import { AdPlacement } from '@/components/ads/AdPlacement';
 
 export const revalidate = 60; // ISR cache revalidation
 
@@ -32,6 +25,9 @@ export default async function HomePage() {
       
       {/* 1. Hero Section */}
       <HeroSection categories={categories} />
+
+      {/* Ad: Below Hero */}
+      <AdPlacement placement="homepage_below_hero" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" />
 
       {/* 2. Featured Categories Section */}
       <section id="categories" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -112,34 +108,10 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* 4. Comparison Teaser Section */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="relative rounded-3xl bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 text-white p-8 sm:p-12 overflow-hidden shadow-xl border border-slate-700">
-          <div className="max-w-2xl space-y-4">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/20 text-amber-300 text-xs font-bold border border-amber-500/30">
-              <Layers className="w-3.5 h-3.5" />
-              <span>Side-by-Side Matrix</span>
-            </div>
-            <h3 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
-              Compare 2 to 4 Products Head-to-Head
-            </h3>
-            <p className="text-slate-300 text-sm leading-relaxed">
-              Torn between two high-end wireless headphones or deciding between ergonomic mice? Use our interactive comparison engine to contrast technical specifications, pros & cons, and marketplace availability side by side.
-            </p>
-            <div className="pt-2">
-              <Link
-                href="/compare"
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-sm shadow-md transition-all"
-              >
-                <span>Launch Comparison Matrix</span>
-                <ArrowRight className="w-4 h-4" />
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* Ad: Between product sections */}
+      <AdPlacement placement="homepage_between_sections" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" />
 
-      {/* 5. Popular Buying Guides & Reviews */}
+      {/* 4. Popular Buying Guides & Reviews */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col sm:flex-row items-baseline justify-between mb-8 gap-4">
           <div>
@@ -208,7 +180,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* 6. Newsletter Subscription */}
+      {/* 5. Newsletter Subscription */}
       <NewsletterSection />
 
     </div>

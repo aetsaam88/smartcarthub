@@ -2,6 +2,10 @@ import { cookies } from 'next/headers';
 
 const SESSION_COOKIE_NAME = 'gc_admin_session';
 
+// Admin Credentials
+const ADMIN_EMAIL = 'aetsaam@store.example';
+const ADMIN_PASSWORD = 'Aetsaam@88.!#';
+
 export interface AdminUser {
   id: string;
   email: string;
@@ -9,12 +13,9 @@ export interface AdminUser {
   role: 'super_admin' | 'editor';
 }
 
-// Default development credentials (can be overridden via environment variables)
-const DEFAULT_ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'admin@globalcart.example';
-const DEFAULT_ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'GlobalCart2025!#';
-
+// Verify Admin Session
 export async function verifyAdminSession(): Promise<AdminUser | null> {
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
   const token = cookieStore.get(SESSION_COOKIE_NAME)?.value;
 
   if (!token) {
@@ -25,18 +26,23 @@ export async function verifyAdminSession(): Promise<AdminUser | null> {
     const decoded = Buffer.from(token, 'base64').toString('utf-8');
     const [email, role, timestamp] = decoded.split(':');
 
-    // Token expires in 7 days
     const tokenTime = parseInt(timestamp, 10);
-    if (isNaN(tokenTime) || Date.now() - tokenTime > 7 * 24 * 60 * 60 * 1000) {
+
+    // Session expires after 7 days
+    if (
+      isNaN(tokenTime) ||
+      tokenTime > Date.now() ||
+      Date.now() - tokenTime > 7 * 24 * 60 * 60 * 1000
+    ) {
       return null;
     }
 
-    if (email === DEFAULT_ADMIN_EMAIL) {
+    if (email.toLowerCase() === ADMIN_EMAIL.toLowerCase()) {
       return {
         id: 'adm-1',
-        email,
+        email: ADMIN_EMAIL,
         name: 'Lead Administrator',
-        role: (role as 'super_admin' | 'editor') || 'super_admin',
+        role: role === 'editor' ? 'editor' : 'super_admin',
       };
     }
   } catch {
@@ -46,8 +52,13 @@ export async function verifyAdminSession(): Promise<AdminUser | null> {
   return null;
 }
 
-export async function createAdminSession(email: string, role = 'super_admin'): Promise<void> {
-  const cookieStore = cookies();
+// Create Admin Session
+export async function createAdminSession(
+  email: string,
+  role: 'super_admin' | 'editor' = 'super_admin'
+): Promise<void> {
+  const cookieStore = await cookies();
+
   const payload = `${email}:${role}:${Date.now()}`;
   const token = Buffer.from(payload).toString('base64');
 
@@ -55,20 +66,29 @@ export async function createAdminSession(email: string, role = 'super_admin'): P
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'lax',
-    maxAge: 7 * 24 * 60 * 60, // 7 days
+    maxAge: 7 * 24 * 60 * 60,
     path: '/',
   });
 }
 
+// Destroy Admin Session
 export async function destroyAdminSession(): Promise<void> {
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
   cookieStore.delete(SESSION_COOKIE_NAME);
 }
 
-export async function authenticateAdmin(email: string, pass: string): Promise<boolean> {
-  if (email.toLowerCase().trim() === DEFAULT_ADMIN_EMAIL.toLowerCase() && pass === DEFAULT_ADMIN_PASSWORD) {
-    await createAdminSession(email);
+// Authenticate Admin
+export async function authenticateAdmin(
+  email: string,
+  pass: string
+): Promise<boolean> {
+  if (
+    email.toLowerCase().trim() === ADMIN_EMAIL.toLowerCase() &&
+    pass === ADMIN_PASSWORD
+  ) {
+    await createAdminSession(ADMIN_EMAIL);
     return true;
   }
+
   return false;
 }

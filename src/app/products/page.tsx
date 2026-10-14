@@ -2,6 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import { repository } from '@/lib/data/repository';
 import { ProductCard } from '@/components/products/ProductCard';
+import { AdPlacement } from '@/components/ads/AdPlacement';
 import { Search, Filter, SlidersHorizontal, ArrowUpDown, X } from 'lucide-react';
 
 interface ProductsPageProps {
@@ -116,10 +117,20 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
 
       {/* Grid or Empty State */}
       {sortedProducts.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {sortedProducts.map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
+        <div className="space-y-0">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {sortedProducts.map((product, index) => (
+              <React.Fragment key={product.id}>
+                <ProductCard product={product} />
+                {/* Insert ad between every 6th product (after index 5, 11, 17 …) */}
+                {(index + 1) % 6 === 0 && index < sortedProducts.length - 1 && (
+                  <div className="col-span-1 sm:col-span-2 lg:col-span-3">
+                    <AdPlacement placement="products_between_cards" />
+                  </div>
+                )}
+              </React.Fragment>
+            ))}
+          </div>
         </div>
       ) : (
         <div className="text-center py-20 bg-white rounded-2xl border border-dashed border-slate-300 space-y-4">

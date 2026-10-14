@@ -14,6 +14,7 @@ import {
   LogOut,
   ShoppingBag,
   ShieldAlert,
+  MonitorPlay,
 } from 'lucide-react';
 
 export default async function AdminLayout({
@@ -91,6 +92,14 @@ export default async function AdminLayout({
             >
               <BarChart3 className="w-4 h-4 text-amber-400" />
               <span className="font-medium">Click Analytics</span>
+            </Link>
+
+            <Link
+              href="/admin/advertisements"
+              className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-slate-300 hover:bg-slate-800 hover:text-white transition-colors"
+            >
+              <MonitorPlay className="w-4 h-4 text-amber-400" />
+              <span className="font-medium">Advertisements / AdSense</span>
             </Link>
 
             <Link

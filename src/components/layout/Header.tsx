@@ -7,22 +7,16 @@ import {
   Search,
   Menu,
   X,
-  Globe,
-  SlidersHorizontal,
   ChevronDown,
   Lock,
-  Layers,
-  Sparkles,
   ShoppingBag,
 } from 'lucide-react';
 import { useMarketplace } from '@/context/MarketplaceContext';
-import { useComparison } from '@/context/ComparisonContext';
 import { MarketplaceCode } from '@/types';
 
 export function Header() {
   const router = useRouter();
   const { currentMarketplace, setMarketplace, allMarketplaces } = useMarketplace();
-  const { comparedProducts } = useComparison();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [marketDropdownOpen, setMarketDropdownOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -39,9 +33,9 @@ export function Header() {
     { label: 'Home', href: '/' },
     { label: 'Products', href: '/products' },
     { label: 'Categories', href: '/#categories' },
-    { label: 'Compare', href: '/compare', badge: comparedProducts.length > 0 ? comparedProducts.length : undefined },
     { label: 'Buying Guides', href: '/blog' },
     { label: 'About', href: '/about' },
+    { label: 'Contact Us', href: '/contact'}
   ];
 
   return (
@@ -51,26 +45,25 @@ export function Header() {
           
           {/* Logo */}
           <div className="flex items-center gap-6">
-           
-<Link href="/" className="flex items-center gap-2 group">
-  {/* Logo Icon */}
-  <div className="w-10 h-10 rounded-xl bg-slate-900 flex items-center justify-center shadow-md shadow-amber-500/10 group-hover:bg-amber-600 transition-colors duration-300">
-    <ShoppingBag className="w-5 h-5 text-amber-400 group-hover:text-white transition-colors duration-300" />
-  </div>
+            <Link href="/" className="flex items-center gap-2 group">
+              {/* Logo Icon */}
+              <div className="w-10 h-10 rounded-xl bg-slate-900 flex items-center justify-center shadow-md shadow-amber-500/10 group-hover:bg-amber-600 transition-colors duration-300">
+                <ShoppingBag className="w-5 h-5 text-amber-400 group-hover:text-white transition-colors duration-300" />
+              </div>
 
-  {/* Brand Name */}
-  <div className="flex flex-col">
-    <span className="font-extrabold text-xl tracking-tight text-slate-900 group-hover:text-amber-600 transition-colors duration-300">
-      SmartCart
-      <span className="text-amber-500">Hub</span>
-    </span>
+              {/* Brand Name */}
+              <div className="flex flex-col">
+                <span className="font-extrabold text-xl tracking-tight text-slate-900 group-hover:text-amber-600 transition-colors duration-300">
+                  SmartCart
+                  <span className="text-amber-500">Hub</span>
+                </span>
 
-    {/* Tagline */}
-    <span className="text-[10px] uppercase tracking-wider font-semibold text-slate-400 -mt-1">
-      Smart Shopping, Better Living
-    </span>
-  </div>
-</Link>
+                {/* Tagline */}
+                <span className="text-[10px] uppercase tracking-wider font-semibold text-slate-400 -mt-1">
+                  Smart Shopping, Better Living
+                </span>
+              </div>
+            </Link>
 
             {/* Desktop Nav Links */}
             <nav className="hidden lg:flex items-center space-x-1">
@@ -81,11 +74,6 @@ export function Header() {
                   className="px-3 py-2 text-sm font-medium text-slate-700 hover:text-amber-600 hover:bg-slate-50 rounded-md transition-colors relative flex items-center gap-1.5"
                 >
                   {link.label}
-                  {link.badge !== undefined && (
-                    <span className="bg-amber-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full">
-                      {link.badge}
-                    </span>
-                  )}
                 </Link>
               ))}
             </nav>
@@ -200,11 +188,6 @@ export function Header() {
                 className="flex items-center justify-between px-3 py-2.5 text-sm font-medium text-slate-800 hover:bg-slate-50 hover:text-amber-600 rounded-lg"
               >
                 <span>{link.label}</span>
-                {link.badge !== undefined && (
-                  <span className="bg-amber-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">
-                    {link.badge}
-                  </span>
-                )}
               </Link>
             ))}
             <Link
